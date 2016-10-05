@@ -99,7 +99,7 @@ public class DefaultMetadataSyncService
     }
 
     @Override
-    public MetadataSyncSummary doMetadataSync( MetadataSyncParams syncParams )
+    public MetadataSyncSummary doMetadataSync( MetadataSyncParams syncParams ) //TODO: code in this method should be synchronized
         throws MetadataSyncServiceException
     {
         MetadataVersion version = getMetadataVersion( syncParams );
@@ -110,7 +110,7 @@ public class DefaultMetadataSyncService
         }
 
         String metadataVersionSnapshot = getLocalVersionSnapshot( version );
-
+        //TODO: check for empty as well. Better to use from a string util which checks for both null and empty.
         if ( metadataVersionSnapshot == null )
         {
             try

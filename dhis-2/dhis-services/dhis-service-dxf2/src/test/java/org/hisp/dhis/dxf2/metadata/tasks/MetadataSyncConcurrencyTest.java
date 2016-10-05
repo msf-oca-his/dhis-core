@@ -21,8 +21,8 @@ class MetadataSyncTest implements Runnable
 
         try
         {
-            callSyncApi();
-//            callCreateVersionApi();
+//            callSyncApi();
+            callCreateVersionApi();
         }
         catch ( Exception e )
         {
@@ -50,8 +50,17 @@ class MetadataSyncTest implements Runnable
         System.out.println( Thread.currentThread().getName() + ": Calling sync api: " + url );
         System.out.println( Thread.currentThread().getName() + ": Response Code: " + responseCode );
 
-        BufferedReader in = new BufferedReader(
-            new InputStreamReader( con.getInputStream() ) );
+        BufferedReader in;
+        if ( responseCode == 200 )
+        {
+            in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
+        }
+        else
+        {
+            /* error from server */
+            in = new BufferedReader( new InputStreamReader( con.getErrorStream() ) );
+        }
+
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -91,8 +100,17 @@ class MetadataSyncTest implements Runnable
         System.out.println( Thread.currentThread().getName() + ": Calling create version api: " + url );
         System.out.println( Thread.currentThread().getName() + ": Response Code: " + responseCode );
 
-        BufferedReader in = new BufferedReader(
-            new InputStreamReader( con.getInputStream() ) );
+        BufferedReader in;
+        if ( responseCode == 200 )
+        {
+            in = new BufferedReader( new InputStreamReader( con.getInputStream() ) );
+        }
+        else
+        {
+            /* error from server */
+            in = new BufferedReader( new InputStreamReader( con.getErrorStream() ) );
+        }
+
         String inputLine;
         StringBuffer response = new StringBuffer();
 
@@ -153,8 +171,8 @@ public class MetadataSyncConcurrencyTest
 //        Thread t1 = new Thread(syncTask, "Thread 1");
 //        t1.start();
 
-//        MetadataSyncConcurrencyTest.startThreads();
-        MetadataSyncConcurrencyTest.startThreadsUsingExecutorService();
+        MetadataSyncConcurrencyTest.startThreads();
+//        MetadataSyncConcurrencyTest.startThreadsUsingExecutorService();
 
     }
 
