@@ -1910,15 +1910,15 @@ var months =
 
 var generate =
 {
-    month: function (id)
+    month: function (id, parent)
     {
         var options = Object.keys(months).map(function (month)
         {
             return "<option value='" + months[month].index + "'>" + i18n_months[month] + "</option>";
         }).join("");
-        $("#" + id).html(options);
+        $(parent+" #" + id).html(options);
     },
-    days: function (id, monthIndex)
+    days: function (id, monthIndex, parent)
     {
         var month = Object.keys(months)[--monthIndex];
         var noOfDays = months[month].noOfDays;
@@ -1927,9 +1927,9 @@ var generate =
         {
             options += "<option value='" + count + "'>" + count + "</option>"
         }
-        $("#" + id).html(options);
+        $(parent+" #" + id).html(options);
     },
-    time: function (id)
+    time: function (id, parent)
     {
         var hours = 24;
         var times = [];
@@ -1943,7 +1943,7 @@ var generate =
         {
             return "<option value='" + time + "'>" + time + "</option>"
         }).join("");
-        $("#" + id).html(timeOptions);
+        $(parent+" #" + id).html(timeOptions);
     }
 };
 
