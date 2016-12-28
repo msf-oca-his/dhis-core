@@ -67,9 +67,9 @@ $(document).ready(function () {
 
     };
 
-    var updateSyncHeader = function (header, parent)
+    var updateSyncHeader = function (header, parentClass)
     {
-        $(parent+' #addSchedulerLabel').html(header);
+        $(parentClass+' #addSchedulerLabel').html(header);
     };
 
     var defaultScheduler = function () 
@@ -196,20 +196,20 @@ $(document).ready(function () {
         }
     };
 
-    var hideOptions = function (parent)
+    var hideOptions = function (parentClass)
     {
-        $(parent+' .weekPickerContainer').hide();
-        $(parent+' #weekPicker').hide(); //TODO remove
-        $(parent+' #weekPeriod').hide(); //TODO remove
+        $(parentClass+' .weekPickerContainer').hide();
+        $(parentClass+' #weekPicker').hide(); //TODO remove
+        $(parentClass+' #weekPeriod').hide(); //TODO remove
 
-        $(parent+' .yearPickerContainer').hide();
+        $(parentClass+' .yearPickerContainer').hide();
 
-        $(parent+' .timePickerContainer').hide();
-        $(parent+' .syncStartButton').hide(); //TODO remove
+        $(parentClass+' .timePickerContainer').hide();
+        $(parentClass+' .syncStartButton').hide(); //TODO remove
 
-        generate.month("monthPicker", parent);
-        generate.days("dayPicker", 1, parent);
-        generate.time("timePicker", parent);
+        generate.month("monthPicker", parentClass);
+        generate.days("dayPicker", 1, parentClass);
+        generate.time("timePicker", parentClass);
     };
 
     hideOptions('.metadataSyncScheduler');
@@ -251,14 +251,14 @@ $(document).ready(function () {
 
 });
 
-var getCronExpression = function (parent)
+var getCronExpression = function (parentClass)
 {
-    var week = $(parent+" #weekPicker").val();
-    var time = $(parent+" #timePicker").val().split(":");
-    var period = $(parent+" #weekPeriodNumber").val();
-    var month = $(parent+" #monthPicker").val();
-    var day = $(parent+" #dayPicker").val();
-    var selection = $('input[class=radio]:checked', parent+" .radioButtonGroup").val();
+    var week = $(parentClass+" #weekPicker").val();
+    var time = $(parentClass+" #timePicker").val().split(":");
+    var period = $(parentClass+" #weekPeriodNumber").val();
+    var month = $(parentClass+" #monthPicker").val();
+    var day = $(parentClass+" #dayPicker").val();
+    var selection = $('input[class=radio]:checked', parentClass+" .radioButtonGroup").val();
     if(!selection) return false;
 
     var hours = parseInt(time[0]);
