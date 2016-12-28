@@ -53,13 +53,18 @@ $(document).ready(function () {
             updateSyncHeader("Yearly", parentClass);
             $(parentClass+' .yearPickerContainer').show();
             $(parentClass+' .timePickerContainer').show();
+        },
+
+        minute: function (parentClass)
+        {
+            updateSyncHeader("", parentClass);
+        },
+
+        hourly: function (parentClass)
+        {
+            updateSyncHeader("", parentClass);
         }
 
-        // default: function (parentClass)
-        // {
-        //     $(parentClass+' .timePickerContainer').show();
-        //     $(parentClass+' .syncStartButton').show(); //TODO remove
-        // }
     };
 
     var updateSyncHeader = function (header, parent)
@@ -69,9 +74,26 @@ $(document).ready(function () {
 
     var defaultScheduler = function () 
     {
-        ($("#metadataSyncStrategy").val() == "enabled") ? $(".metadataSyncScheduler").show() : $(".metadataSyncScheduler").hide();
-        ($("#dataSynchStrategy").val() == "enabled") ? $(".dataSyncScheduler").show() : $(".dataSyncScheduler").hide();
-        $(".syncStartButton").show(); //TODO remove
+        if($("#metadataSyncStrategy").val() == "enabled")
+        {
+            $(".metadataSyncScheduler").show();
+            setScheduler($("#metadataSyncCron").val(),'.metadataSyncScheduler');
+        }
+        else
+        {
+            $(".metadataSyncScheduler").hide();
+        }
+
+        if($("#dataSynchStrategy").val() == "enabled")
+        {
+            $(".dataSyncScheduler").show();
+            setScheduler($("#dataSyncCron").val(),'.dataSyncScheduler');
+        }
+        else
+        {
+            $(".dataSyncScheduler").hide();
+        }
+
     };
 
     var getSchedules = function (cronExpression)
@@ -98,10 +120,27 @@ $(document).ready(function () {
         var setTime = function () {
             var time = getHour(parseInt(schedules.hours)) + ":" + getMinutes(parseInt(schedules.minutes));
             $(parentClass+' #timePicker').val(time);
-            // displayOptionsFor.default(parentClass);
         };
         var setter = 
         {
+            minute: function ()
+            {
+                if (schedules.day == "*" && schedules.minutes == "0/1" && (schedules.day == schedules.month) && schedules.week == "?")
+                {
+                    $(parentClass + ' #minute').attr("checked", true);
+                    return true;
+                }
+            },
+
+            hourly: function ()
+            {
+                if (schedules.day == "*" && schedules.hours == "*" && schedules.minutes == "0" && schedules.seconds == "0" && (schedules.day == schedules.month) && schedules.week == "?")
+                {
+                    $(parentClass + ' #hourly').attr("checked", true);
+                    return true;
+                }
+            },
+
             daily: function () {
                 if (schedules.day == "*" && (schedules.day == schedules.month) && schedules.week == "?")
                 {
@@ -126,10 +165,10 @@ $(document).ready(function () {
             monthly: function () 
             {
                 if (schedules.month == "*" && schedules.weekPeriod) {
-                    $("#monthly").attr("checked", true);
+                    $(parentClass+" #monthly").attr("checked", true);
                     displayOptionsFor["monthly"](parentClass);
                     $(parentClass+' #weekPicker').val(schedules.week);
-                    $("#weekPeriodNumber").val(schedules.weekPeriod);
+                    $(parentClass+" #weekPeriodNumber").val(schedules.weekPeriod);
                     setTime();
                     return true;
                 }
@@ -145,18 +184,6 @@ $(document).ready(function () {
                     setTime();
                     return true;
                 }
-            },
-
-            minute: function ()
-            {
-                $(parentClass+' #minute').attr("checked", true);
-                return true;
-            },
-
-            hourly: function ()
-            {
-                $(parentClass+' #hourly').attr("checked", true);
-                return true;
             }
         };
         var methods = Object.keys(setter);
@@ -188,8 +215,6 @@ $(document).ready(function () {
     hideOptions('.metadataSyncScheduler');
     hideOptions('.dataSyncScheduler');
     defaultScheduler();
-    setScheduler($("#metadataSyncCron").val(),'.metadataSyncScheduler');
-    setScheduler($("#dataSyncCron").val(),'.dataSyncScheduler');
 
     $(".monthPicker").unbind("change").change(function (e)
     {
@@ -206,7 +231,6 @@ $(document).ready(function () {
         var parent = '.' + $(this).parent().parent().parent().attr('id');
         hideOptions(parent);
         displayOptionsFor[schedulerOption](parent);
-        // displayOptionsFor.default(parent);
     });
 
     $("#metadataSyncStrategy").unbind("change").change(function (e)
@@ -234,7 +258,7 @@ var getCronExpression = function (parent)
     var period = $(parent+" #weekPeriodNumber").val();
     var month = $(parent+" #monthPicker").val();
     var day = $(parent+" #dayPicker").val();
-    var selection = $('input[class=radio]:checked', parent+" .radioButtonGroup").val(); //TODO: check here also
+    var selection = $('input[class=radio]:checked', parent+" .radioButtonGroup").val();
     if(!selection) return false;
 
     var hours = parseInt(time[0]);
@@ -258,37 +282,64 @@ var getCronExpression = function (parent)
         {
             return SECONDS.concat(" ",minutes," ",hours," *"," *"," ",week);
         },
-        minute: '0 0/1 * * * ?',
-        hourly: '0 * * * * ?'
+        minute: function (month, day, week, period, hours, minutes)
+        {
+            return '0 0/1 * * * ?';
+        },
+        hourly: function (month, day, week, period, hours, minutes)
+        {
+            return '0 0 * * * ?';
+        }
+
     };
     return compile[selection](month, day, week, period, hours, minutes);
 };
 
-function submitSchedulingForm() 
+function setScheduledCron(scheduler, cron)
 {
-    
-    if($("#metadataSyncStrategy").val() == "enabled" || $("#dataSynchStrategy").val() == "enabled")
+    var syncCron = getCronExpression('.' + scheduler);
+    if(syncCron)
+    {
+        $('#' + cron).val(syncCron);
+        $('.scheduling').removeAttr('disabled');
+        $('#schedulingForm').submit();
+    }
+    else
+    {
+        setHeaderDelayMessage(sync_scheduler_alert);
+    }
+}
+
+function submitSchedulingForm()
+{
+    var metadataSyncStrategy = $("#metadataSyncStrategy").val();
+    var dataSyncStrategy = $("#dataSynchStrategy").val();
+    if(metadataSyncStrategy == "enabled" && dataSyncStrategy == "enabled")
     {
         var metadataSyncCron = getCronExpression('.metadataSyncScheduler');
         var dataSyncCron = getCronExpression('.dataSyncScheduler');
 
-        if( metadataSyncCron )
+        if(metadataSyncCron && dataSyncCron)
         {
             $('#metadataSyncCron').val(metadataSyncCron);
-            $('.scheduling').removeAttr('disabled');
-            $('#schedulingForm').submit();
-        }
-        else 
-        {
-            setHeaderDelayMessage( metadata_sync_scheduler_alert );
-        }
-
-        if( dataSyncCron )
-        {
             $('#dataSyncCron').val(dataSyncCron);
             $('.scheduling').removeAttr('disabled');
             $('#schedulingForm').submit();
         }
+        else
+        {
+            setHeaderDelayMessage(sync_scheduler_alert);
+        }
+
+    }
+    else if(metadataSyncStrategy == "enabled")
+    {
+        setScheduledCron('metadataSyncScheduler', 'metadataSyncCron');
+    }
+
+    else if(dataSyncStrategy == "enabled")
+    {
+        setScheduledCron('dataSyncScheduler', 'dataSyncCron');
     }
     else
     {

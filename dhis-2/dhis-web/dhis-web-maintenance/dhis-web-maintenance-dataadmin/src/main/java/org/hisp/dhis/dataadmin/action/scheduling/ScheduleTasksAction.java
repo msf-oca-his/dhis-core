@@ -422,7 +422,6 @@ public class ScheduleTasksAction
 
                 if ( STRATEGY_ENABLED.equals( dataSynchStrategy ) )
                 {
-//                    dataSyncCron = CRON_EVERY_MIN;
                     cronKeyMap.putValue( dataSyncCron, TASK_DATA_SYNCH );
                     systemSettingManager.saveSystemSetting( SettingKey.DATA_SYNC_CRON, dataSyncCron );
                 }

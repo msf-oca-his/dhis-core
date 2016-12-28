@@ -13,7 +13,7 @@
             november: '$encoder.jsEscape( $i18n.getString( "month.november" ) , "'")',
             december: '$encoder.jsEscape( $i18n.getString( "month.december" ) , "'")'
         }
-        var metadata_sync_scheduler_alert = '$encoder.jsEscape( $i18n.getString( "metadata_sync_scheduler_alert" ) , "'")';
+        var sync_scheduler_alert = '$encoder.jsEscape( $i18n.getString( "sync_scheduler_alert" ) , "'")';
 </script>
 <link type="text/css" rel="stylesheet" href="style/custom-scheduler.css">
 
@@ -89,8 +89,8 @@
     <div class="syncActionWrapper">
 
           <div class="radioButtonGroup">
-            <input type="radio" class="radio" name="dataSyncDatepick" id="minute" value="Minute">$i18n.getString( "Minute" )<br>
-            <input type="radio" class="radio" name="dataSyncDatepick" id="hourly" value="Hourly">$i18n.getString( "Hourly" )<br>
+            <input type="radio" class="radio" name="dataSyncDatepick" id="minute" value="minute">$i18n.getString( "Minute" )<br>
+            <input type="radio" class="radio" name="dataSyncDatepick" id="hourly" value="hourly">$i18n.getString( "Hourly" )<br>
             <input type="radio" class="radio" name="dataSyncDatepick" id="daily" value="daily">$i18n.getString( "Daily" )<br>
             <input type="radio" class="radio" name="dataSyncDatepick" id="weekly" value="weekly">$i18n.getString( "Weekly" )<br>
             <input type="radio" class="radio" name="dataSyncDatepick" id="monthly" value="monthly">$i18n.getString( "Monthly" )<br>
