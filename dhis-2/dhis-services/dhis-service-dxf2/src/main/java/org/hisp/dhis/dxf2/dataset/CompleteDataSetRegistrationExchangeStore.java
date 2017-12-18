@@ -50,4 +50,6 @@ public interface CompleteDataSetRegistrationExchangeStore
      * @param outputStream the stream to write the JSON result to.
      */
     void writeCompleteDataSetRegistrationsJson( ExportParams params, OutputStream outputStream );
+
+    void writeCompleteDataSetRegistrationsJson(Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes);
 }

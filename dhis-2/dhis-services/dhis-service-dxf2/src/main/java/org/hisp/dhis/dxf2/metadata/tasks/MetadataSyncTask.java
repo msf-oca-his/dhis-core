@@ -120,6 +120,8 @@ public class MetadataSyncTask
 
         metadataSyncPreProcessor.handleAggregateDataPush( context );
 
+        metadataSyncPreProcessor.handleDataSetCompletenessPush( context )
+
         metadataSyncPreProcessor.handleEventDataPush( context );
 
         MetadataVersion metadataVersion = metadataSyncPreProcessor.handleCurrentMetadataVersion( context );

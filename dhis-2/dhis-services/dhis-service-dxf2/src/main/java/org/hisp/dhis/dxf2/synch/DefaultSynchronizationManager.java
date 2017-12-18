@@ -93,6 +93,9 @@ public class DefaultSynchronizationManager
     @Autowired
     private DataValueSetService dataValueSetService;
 
+    @Autowrited
+    CompleteDataSetRegistrationExchangeService completeDataSetRegistrationExchangeService;
+
     @Autowired
     private DataValueService dataValueService;
 
@@ -196,6 +199,26 @@ public class DefaultSynchronizationManager
     }
 
     @Override
+    public ImportSummary executeDataSetCompletenessPush() throws WebMessageParseException
+    {
+        AvailabilityStatus availability = isRemoteServerAvailable();
+        if ( !availability.isAvailable() )
+        {
+            log.info( "Aborting synch, server not available" );
+            return null;
+        }
+
+        String url = systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_URL ) + "/api/completeDataSetRegistrations";
+        String username = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_USERNAME );
+        String password = (String) systemSettingManager.getSystemSetting( SettingKey.REMOTE_INSTANCE_PASSWORD );
+
+        SystemInstance instance = new SystemInstance( url, username, password );
+
+        return executeDataSetCompletenessPush( instance );
+
+    }
+
+    @Override
     public ImportSummary executeDataPush() throws WebMessageParseException
     {
         AvailabilityStatus availability = isRemoteServerAvailable();
@@ -249,7 +272,6 @@ public class DefaultSynchronizationManager
         {
             request.getHeaders().setContentType( MediaType.APPLICATION_JSON );
             request.getHeaders().add( HEADER_AUTHORIZATION, CodecUtils.getBasicAuthString( instance.getUsername(), instance.getPassword() ) );
-
             dataValueSetService.writeDataValueSetJson( lastSuccessTime, request.getBody(), new IdSchemes() );
         };
 
@@ -292,6 +314,57 @@ public class DefaultSynchronizationManager
 
         return summary;
     }
+
+    public ImportSummary executeDataSetCompletenessPush( SystemInstance systemInstance) throws WebMessageParseException{
+        final Date startTime = new Date();
+        final Date lastSuccessTime = getLastDataSynchSuccessFallback();
+        final RequestCallback requestCallback = request ->
+        {
+            request.getHeaders().setContentType( MediaType.APPLICATION_JSON );
+            request.getHeaders().add( HEADER_AUTHORIZATION, CodecUtils.getBasicAuthString( instance.getUsername(), instance.getPassword() ) );
+
+            completeDataSetRegistrationExchangeService.writeCompleteDataSetRegistrationsJson( lastSuccessTime, request.getBody(), new IdSchemes() );
+        };
+
+        ResponseExtractor<ImportSummary> responseExtractor = new ImportSummaryResponseExtractor();
+        ImportSummary summary = null;
+        try
+        {
+            summary = restTemplate
+                .execute( instance.getUrl(), HttpMethod.POST, requestCallback, responseExtractor );
+        }
+
+        catch ( HttpClientErrorException ex )
+        {
+            String responseBody = ex.getResponseBodyAsString();
+            summary = WebMessageParseUtils.fromWebMessageResponse( responseBody, ImportSummary.class );
+        }
+        catch ( HttpServerErrorException ex )
+        {
+            String responseBody = ex.getResponseBodyAsString();
+            log.error( "Internal error happened during completeness push: " + responseBody, ex );
+            throw ex;
+        }
+        catch ( ResourceAccessException ex )
+        {
+            log.error( "Exception during completeess data push: " + ex.getMessage(), ex );
+            throw ex;
+        }
+
+        log.info( "Synch summary: " + summary );
+
+        if ( summary != null && ImportStatus.SUCCESS.equals( summary.getStatus() ) )
+        {
+            log.info( "Synch successful, setting last success time: " + startTime );
+        }
+        else
+        {
+            log.warn( "Sync failed: " + summary );
+        }
+
+        return summary;
+
+    };
 
     @Override
     public ImportSummaries executeEventPush() throws WebMessageParseException

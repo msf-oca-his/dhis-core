@@ -198,6 +198,12 @@ public class DefaultCompleteDataSetRegistrationExchangeService
     }
 
     @Override
+    public void writeCompleteDataSetRegistrationsJson(Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes) {
+        cdsrStore.writeCompleteDataSetRegistrationsJson( lastUpdated, outputStream, idSchemes );
+    }
+
+
+    @Override
     public ImportSummary saveCompleteDataSetRegistrationsXml( InputStream in, ImportOptions importOptions )
     {
         return saveCompleteDataSetRegistrationsXml( in, importOptions, null );
@@ -225,6 +231,9 @@ public class DefaultCompleteDataSetRegistrationExchangeService
     {
         return saveCompleteDataSetRegistrationsJson( in, ImportOptions.getDefaultImportOptions(), null );
     }
+
+    @Override
+    public ImportSummary
 
     @Override
     public ImportSummary saveCompleteDataSetRegistrationsJson( InputStream in, ImportOptions importOptions, TaskId taskId )

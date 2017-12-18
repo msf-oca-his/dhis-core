@@ -49,6 +49,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 
 import java.io.OutputStream;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Date;
 
@@ -119,6 +121,49 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
         write( params, cdsr );
 
         IOUtils.closeQuietly( outputStream );
+    }
+
+    @Override
+    public void writeCompleteDataSetRegistrationsJson(Date lastUpdated, OutputStream outputStream, IdSchemes idSchemes) {
+        String dsScheme = idSchemes.getDataSetIdScheme().getIdentifiableString().toLowerCase();
+        String ouScheme = idSchemes.getOrgUnitIdScheme().getIdentifiableString().toLowerCase();
+        String ocScheme = idSchemes.getCategoryOptionComboIdScheme().getIdentifiableString().toLowerCase();
+
+       CompleteDataSetRegistrations completeDataSetRegistrations = new StreamingJsonCompleteDataSetRegistrations( outputStream );
+
+
+        final String completenessSql =
+            "select ds." + dsScheme + " as dsid, pe.periodid as peid, ou." + ouScheme + " as ouid, aoc." + ocScheme + " as aocid, " +
+                "cdr.date, cdr.storedby " +
+                "from completedatasetregistration cdr " +
+                "join dataset ds on (cdr.datasetid=ds.datasetid) " +
+                "join period pe on (cdr.periodid=pe.periodid) " +
+                "join organisationunit ou on (cdr.sourceid=ou.organisationunitid) " +
+                "join categoryoptioncombo aoc on (cdr.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
+                "where cdr.date >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
+
+        writeCompleteness(completenessSql,new DataExportParams(),completeDataSetRegistrations);
+    }
+
+    private void writeCompleteness(String sql, DataExportParams params, CompleteDataSetRegistrations completeDataSetRegistrations) {
+
+        jdbcTemplate.query( sql, new RowCallbackHandler()
+        {
+            @Override
+            public void processRow( ResultSet rs ) throws SQLException
+            {
+                CompleteDataSetRegistration completeDataSetRegistration = completeDataSetRegistrations.getCompleteDataSetRegistrationInstance();
+                completeDataSetRegistration.open();
+                completeDataSetRegistration.setDataSet( rs.getString( "dsid" ) );
+                completeDataSetRegistration.setPeriod( rs.getString( "peid" ) );
+                completeDataSetRegistration.setOrganisationUnit( rs.getString("ouid") );
+                completeDataSetRegistration.setAttributeOptionCombo( rs.getString( "aocid" ) );
+                completeDataSetRegistration.setDate(removeTime(rs.getString( "date" )));
+                completeDataSetRegistration.setStoredBy( rs.getString( "storedBy" ) );
+                completeDataSetRegistration.close();
+            }
+        });
+        completeDataSetRegistrations.close();
     }
 
     //--------------------------------------------------------------------------
