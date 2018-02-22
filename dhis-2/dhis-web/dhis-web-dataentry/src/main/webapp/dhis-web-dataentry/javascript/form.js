@@ -2045,7 +2045,7 @@ function getPreviousEntryField( field )
 // Data completeness
 // -----------------------------------------------------------------------------
 
-function registerCompleteDataSet()
+function registerCompleteDataSet(completedStatus)
 {
 	if ( !confirm( i18n_confirm_complete ) )
 	{
@@ -2058,6 +2058,8 @@ function registerCompleteDataSet()
 
         var cc = dhis2.de.getCurrentCategoryCombo();
         var cp = dhis2.de.getCurrentCategoryOptionsQueryValue();
+        
+        params.isCompleted = completedStatus;
         
         if ( cc && cp )
         {
@@ -2075,7 +2077,7 @@ function registerCompleteDataSet()
 	    	success: function( data, textStatus, xhr )
 	        {
                 $( document ).trigger( dhis2.de.event.completed, [ dhis2.de.currentDataSetId, params ] );
-	    		disableCompleteButton();
+	    		disableCompleteButton(params.isCompleted);
 	    		dhis2.de.storageManager.clearCompleteDataSet( params );
 	        },
 		    error:  function( xhr, textStatus, errorThrown )
@@ -2087,7 +2089,7 @@ function registerCompleteDataSet()
 	        	else // Offline, keep local value
 	        	{
                     $( document ).trigger( dhis2.de.event.completed, [ dhis2.de.currentDataSetId, params ] );
-	        		disableCompleteButton();
+	        		disableCompleteButton(params.isCompleted);
 	        		setHeaderMessage( i18n_offline_notification );
 	        	}
 		    }
@@ -2095,57 +2097,57 @@ function registerCompleteDataSet()
 	} );
 }
 
-function undoCompleteDataSet()
-{
-	if ( !confirm( i18n_confirm_undo ) )
-	{
-		return false;
-	}
-
-    var params = dhis2.de.storageManager.getCurrentCompleteDataSetParams();
-
-    var cc = dhis2.de.getCurrentCategoryCombo();
-    var cp = dhis2.de.getCurrentCategoryOptionsQueryValue();
-    
-    var params = 
-    	'?ds=' + params.ds +
-    	'&pe=' + params.pe +
-    	'&ou=' + params.ou + 
-    	'&multiOu=' + params.multiOu;
-
-    if ( cc && cp )
-    {
-    	params += '&cc=' + cc;
-    	params += '&cp=' + cp;
-    }
-        
-    $.ajax( {
-    	url: '../api/25/completeDataSetRegistrations' + params,
-    	dataType: 'json',
-    	type: 'delete',
-    	success: function( data, textStatus, xhr )
-        {
-          $( document ).trigger( dhis2.de.event.uncompleted, dhis2.de.currentDataSetId );
-          disableUndoButton();
-          dhis2.de.storageManager.clearCompleteDataSet( params );
-        },
-        error: function( xhr, textStatus, errorThrown )
-        {
-        	if ( 409 == xhr.status || 500 == xhr.status ) // Invalid value or locked
-        	{
-        		setHeaderMessage( xhr.responseText );
-        	}
-        	else // Offline, keep local value
-        	{
-                $( document ).trigger( dhis2.de.event.uncompleted, dhis2.de.currentDataSetId );
-        		disableUndoButton();
-        		setHeaderMessage( i18n_offline_notification );
-        	}
-
-    		dhis2.de.storageManager.clearCompleteDataSet( params );
-        }
-    } );
-}
+// function undoCompleteDataSet()
+// {
+// 	if ( !confirm( i18n_confirm_undo ) )
+// 	{
+// 		return false;
+// 	}
+//
+//     var params = dhis2.de.storageManager.getCurrentCompleteDataSetParams();
+//
+//     var cc = dhis2.de.getCurrentCategoryCombo();
+//     var cp = dhis2.de.getCurrentCategoryOptionsQueryValue();
+//
+//     var params =
+//     	'?ds=' + params.ds +
+//     	'&pe=' + params.pe +
+//     	'&ou=' + params.ou +
+//     	'&multiOu=' + params.multiOu;
+//
+//     if ( cc && cp )
+//     {
+//     	params += '&cc=' + cc;
+//     	params += '&cp=' + cp;
+//     }
+//
+//     $.ajax( {
+//     	url: '../api/25/completeDataSetRegistrations' + params,
+//     	dataType: 'json',
+//     	type: 'delete',
+//     	success: function( data, textStatus, xhr )
+//         {
+//           $( document ).trigger( dhis2.de.event.uncompleted, dhis2.de.currentDataSetId );
+//           disableUndoButton(params.isCompleted);
+//           dhis2.de.storageManager.clearCompleteDataSet( params );
+//         },
+//         error: function( xhr, textStatus, errorThrown )
+//         {
+//         	if ( 409 == xhr.status || 500 == xhr.status ) // Invalid value or locked
+//         	{
+//         		setHeaderMessage( xhr.responseText );
+//         	}
+//         	else // Offline, keep local value
+//         	{
+//                 $( document ).trigger( dhis2.de.event.uncompleted, dhis2.de.currentDataSetId );
+//         		disableUndoButton();
+//         		setHeaderMessage( i18n_offline_notification );
+//         	}
+//
+//     		dhis2.de.storageManager.clearCompleteDataSet( params );
+//         }
+//     } );
+// }
 
 function disableUndoButton()
 {
@@ -2153,10 +2155,15 @@ function disableUndoButton()
     $( '#undoButton' ).attr( 'disabled', 'disabled' );
 }
 
-function disableCompleteButton()
+function disableCompleteButton(status)
 {
-    $( '#completeButton' ).attr( 'disabled', 'disabled' );
-    $( '#undoButton' ).removeAttr( 'disabled' );
+    if(status == true) {
+        $( '#completeButton' ).attr( 'disabled', 'disabled' );
+        $( '#undoButton' ).removeAttr( 'disabled' );
+    }
+    else {
+        disableUndoButton();
+    }
 }
 
 function displayUserDetails()
@@ -3004,7 +3011,7 @@ function StorageManager()
         {
         	localStorage[KEY_COMPLETEDATASETS] = JSON.stringify( completeDataSets );
         	
-        	log( 'Successfully stored complete registration' );
+
         }
         catch ( e )
         {

@@ -35,6 +35,8 @@ import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.StringUtils;
 import org.hisp.dhis.common.DxfNamespaces;
 
+import java.util.Date;
+
 /**
  * @author Halvdan Hoem Grelland
  */
@@ -74,6 +76,12 @@ public class CompleteDataSetRegistration
     protected String date;
 
     protected String storedBy;
+
+    protected Date lastUpdated;
+
+    protected String lastUpdatedBy;
+
+    protected boolean isCompleted;
 
     //--------------------------------------------------------------------------
     // Constructors
@@ -195,5 +203,41 @@ public class CompleteDataSetRegistration
     public void setStoredBy( String storedBy )
     {
         this.storedBy = storedBy;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getLastUpdatedBy()
+    {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy( String lastUpdatedBy )
+    {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public boolean getCompleted()
+    {
+        return isCompleted;
+    }
+
+    public void setCompleted( Boolean completed )
+    {
+        isCompleted = completed;
     }
 }
