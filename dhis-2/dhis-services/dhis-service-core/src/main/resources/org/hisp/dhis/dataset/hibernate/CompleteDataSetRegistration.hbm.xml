@@ -22,6 +22,9 @@
     <property name="date" column="date" type="timestamp" />
 
     <property name="storedBy" column="storedby" />
+    <property name="lastUpdated" type="timestamp" not-null="true"/>
+    <many-to-one name="lastUpdatedBy" column="lastupdatedby" foreign-key="fk_lastupdatedby_userid"/>
+    <property name="isCompleted" type="boolean" column="iscompleted" not-null="true"/>
 
   </class>
 </hibernate-mapping>
