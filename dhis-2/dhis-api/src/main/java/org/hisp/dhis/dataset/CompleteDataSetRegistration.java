@@ -10,7 +10,7 @@ package org.hisp.dhis.dataset;
  * list of conditions and the following disclaimer.
  *
  * Redistributions in binary form must reproduce the above copyright notice,
- * this list of conditions and the following disclaimer in the documentation
+ * this list of conditions and the following disclacimer in the documentation
  * and/or other materials provided with the distribution.
  * Neither the name of the HISP project nor the names of its contributors may
  * be used to endorse or promote products derived from this software without
@@ -28,20 +28,19 @@ package org.hisp.dhis.dataset;
  * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-import java.io.Serializable;
-import java.util.Date;
-
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
+import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
+import com.google.common.base.MoreObjects;
 import org.hisp.dhis.common.BaseIdentifiableObject;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
-import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
-import com.google.common.base.MoreObjects;
+import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @author Lars Helge Overland
@@ -68,6 +67,9 @@ public class CompleteDataSetRegistration
     private String storedBy;
 
     private transient String periodName;
+    private Date lastUpdated;
+    private String lastUpdatedBy;
+    private boolean isCompleted;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -78,7 +80,7 @@ public class CompleteDataSetRegistration
     }
 
     public CompleteDataSetRegistration( DataSet dataSet, Period period, OrganisationUnit source,
-        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy )
+        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, Date lastUpdated, String lastUpdatedBy, boolean isCompleted)
     {
         this.dataSet = dataSet;
         this.period = period;
@@ -86,6 +88,9 @@ public class CompleteDataSetRegistration
         this.attributeOptionCombo = attributeOptionCombo;
         this.date = date;
         this.storedBy = storedBy;
+        this.lastUpdated = lastUpdated;
+        this.lastUpdatedBy = lastUpdatedBy;
+        this.isCompleted = isCompleted;
     }
 
     // -------------------------------------------------------------------------
@@ -268,6 +273,38 @@ public class CompleteDataSetRegistration
         this.periodName = periodName;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public String getLastUpdatedBy() { return lastUpdatedBy; }
+
+    public void setLastUpdatedBy( String lastUpdatedBy ) { this.lastUpdatedBy = lastUpdatedBy; }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Date getLastUpdated()
+    {
+        return lastUpdated;
+    }
+
+    public void setLastUpdated( Date lastUpdated )
+    {
+        this.lastUpdated = lastUpdated;
+    }
+
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean getIsCompleted()
+    {
+        return isCompleted;
+    }
+
+    public void setIsCompleted( boolean isCompleted )
+    {
+        this.isCompleted = isCompleted;
+    }
+
+
     @Override
     public String toString()
     {
@@ -279,6 +316,9 @@ public class CompleteDataSetRegistration
             .add( "date", date )
             .add( "storedBy", storedBy )
             .add( "periodName", periodName )
+            .add( "lastUpdated", lastUpdated )
+            .add( "lastUpdatedBy", lastUpdatedBy )
+            .add( "isCompleted", isCompleted )
             .toString();
     }
 }

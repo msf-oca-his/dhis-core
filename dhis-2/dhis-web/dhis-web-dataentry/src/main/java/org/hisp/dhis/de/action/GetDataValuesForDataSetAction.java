@@ -298,7 +298,7 @@ public class GetDataValuesForDataSetAction
 
             if ( registration != null )
             {
-                complete = true;
+                complete = registration.getIsCompleted();
                 date = registration.getDate();
                 storedBy = registration.getStoredBy();
             }
@@ -307,8 +307,6 @@ public class GetDataValuesForDataSetAction
         }
         else
         {
-            complete = true;
-
             // -----------------------------------------------------------------
             // If multi-org and one of the children is locked, lock all
             // -----------------------------------------------------------------
@@ -327,10 +325,10 @@ public class GetDataValuesForDataSetAction
                     CompleteDataSetRegistration registration = registrationService.getCompleteDataSetRegistration(
                         dataSet, period, ou, attributeOptionCombo );
 
-                    if ( complete && registration == null )
-                    {
-                        complete = false;
+                    if(registration != null) {
+                        complete = registration.getIsCompleted();
                     }
+
                 }
             }
         }

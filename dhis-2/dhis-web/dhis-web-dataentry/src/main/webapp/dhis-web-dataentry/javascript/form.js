@@ -2076,7 +2076,7 @@ function getPreviousEntryField( field )
 // Data completeness
 // -----------------------------------------------------------------------------
 
-function registerCompleteDataSet()
+function registerCompleteDataSet(completedStatus)
 {
 	if ( !confirm( i18n_confirm_complete ) )
 	{
@@ -2089,6 +2089,8 @@ function registerCompleteDataSet()
 
         var cc = dhis2.de.getCurrentCategoryCombo();
         var cp = dhis2.de.getCurrentCategoryOptionsQueryValue();
+        
+        params.isCompleted = completedStatus;
         
         if ( cc && cp )
         {
@@ -2106,15 +2108,15 @@ function registerCompleteDataSet()
             {
                 if( item.uid )
                 {    			  	        
-                    cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: item.uid} );
+                    cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: item.uid, isCompleted: true} );
                 }            
             } );
         }
         else
         {
-            cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: params.ou} );
+            cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: params.ou, isCompleted: true} );
         }
-	
+
 	    $.ajax( {
 	    	url: '../api/completeDataSetRegistrations',
 	    	data: JSON.stringify( cdsr ),
@@ -2143,7 +2145,7 @@ function registerCompleteDataSet()
 	        	else // Offline, keep local value
 	        	{
                     $( document ).trigger( dhis2.de.event.completed, [ dhis2.de.currentDataSetId, params ] );
-	        		disableCompleteButton();
+	        		disableCompleteButton(params.isCompleted);
 	        		setHeaderMessage( i18n_offline_notification );
 	        	}
 		    }
@@ -2228,16 +2230,22 @@ function undoCompleteDataSet()
     } );
 }
 
+
 function disableUndoButton()
 {
     $( '#completeButton' ).removeAttr( 'disabled' );
     $( '#undoButton' ).attr( 'disabled', 'disabled' );
 }
 
-function disableCompleteButton()
+function disableCompleteButton(status)
 {
-    $( '#completeButton' ).attr( 'disabled', 'disabled' );
-    $( '#undoButton' ).removeAttr( 'disabled' );
+    if(status == true) {
+        $( '#completeButton' ).attr( 'disabled', 'disabled' );
+        $( '#undoButton' ).removeAttr( 'disabled' );
+    }
+    else {
+        disableUndoButton();
+    }
 }
 
 function displayUserDetails()
@@ -3105,7 +3113,7 @@ function StorageManager()
         {
         	localStorage[KEY_COMPLETEDATASETS] = JSON.stringify( completeDataSets );
         	
-        	log( 'Successfully stored complete registration' );
+
         }
         catch ( e )
         {
