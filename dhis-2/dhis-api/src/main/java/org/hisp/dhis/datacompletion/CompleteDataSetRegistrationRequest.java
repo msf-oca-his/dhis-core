@@ -57,6 +57,8 @@ public class CompleteDataSetRegistrationRequest
 
     private boolean multiOu;
 
+    private boolean  isCompleted;
+
     public CompleteDataSetRegistrationRequest()
     {
     }
@@ -155,5 +157,17 @@ public class CompleteDataSetRegistrationRequest
     public void setMultiOu( boolean multiOu )
     {
         this.multiOu = multiOu;
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public boolean isCompleted()
+    {
+        return isCompleted;
+    }
+
+    public void setCompleted( boolean completed )
+    {
+        isCompleted = completed;
     }
 }

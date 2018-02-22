@@ -134,14 +134,14 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
 
         final String completenessSql =
             "select ds." + dsScheme + " as dsid, pe.startdate as pestart, pt.name as ptname, ou." + ouScheme + " as ouid, aoc." + ocScheme + " as aocid, " +
-                "cdr.date, cdr.storedby " +
+                "cdr.date, cdr.storedby, cdr.lastUpdated , cdr.lastUpdatedBy, cdr.isCompleted" +
                 "from completedatasetregistration cdr " +
                 "join dataset ds on (cdr.datasetid=ds.datasetid) " +
                 "join period pe on (cdr.periodid=pe.periodid) " +
                 "join periodtype pt on (pe.periodtypeid=pt.periodtypeid) " +
                 "join organisationunit ou on (cdr.sourceid=ou.organisationunitid) " +
                 "join categoryoptioncombo aoc on (cdr.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
-                "where cdr.date >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
+                "where cdr.lastUpdated >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
 
         writeCompleteness( completenessSql, completeDataSetRegistrations );
     }
@@ -166,6 +166,9 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
                 completeDataSetRegistration.setAttributeOptionCombo( rs.getString( "aocid" ) );
                 completeDataSetRegistration.setDate( removeTime( rs.getString( "date" ) ) );
                 completeDataSetRegistration.setStoredBy( rs.getString( "storedBy" ) );
+                completeDataSetRegistration.setLastUpdatedBy( rs.getString("lastUpdatedBy"));
+                completeDataSetRegistration.setLastUpdated(rs.getDate( "lastUpdated" ));
+                completeDataSetRegistration.setCompleted( rs.getBoolean( "isCompleted" ) );
                 completeDataSetRegistration.close();
             }
         } );
