@@ -310,7 +310,7 @@ public class CompleteDataSetRegistrationController
     // -------------------------------------------------------------------------
 
     private void addRegistrationsForOrgUnits( List<CompleteDataSetRegistration> registrations, Set<OrganisationUnit> organisationUnits, DataSet dataSet, Period period,
-        DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate, Date lastUpdated, String lastUpdatedBy, boolean isCompleted )
+        DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate, Date lastUpdated,boolean isCompleted )
         throws WebMessageException
     {
         for ( OrganisationUnit ou : organisationUnits )
@@ -318,7 +318,7 @@ public class CompleteDataSetRegistrationController
             if ( ou.getDataSets().contains( dataSet ) )
             {
                 CompleteDataSetRegistration registration =
-                    registerCompleteDataSet( dataSet, period, ou, attributeOptionCombo, storedBy, completionDate, lastUpdated, lastUpdatedBy, isCompleted );
+                    registerCompleteDataSet( dataSet, period, ou, attributeOptionCombo, storedBy, completionDate, lastUpdated,isCompleted );
 
                 if ( registration != null )
                 {
@@ -360,7 +360,7 @@ public class CompleteDataSetRegistrationController
 
         return Pair.of( new BufferedInputStream( new FileInputStream( tmpFile ) ), tmpFile.toPath() );
     }
-
+    
     private void unRegisterCompleteDataSet( Set<DataSet> dataSets, Period period,
         Set<OrganisationUnit> orgUnits, DataElementCategoryOptionCombo attributeOptionCombo )
     {
