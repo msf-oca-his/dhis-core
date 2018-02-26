@@ -1,7 +1,10 @@
 <?xml version="1.0"?>
 <!DOCTYPE hibernate-mapping PUBLIC
   "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
-  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd">
+  "http://www.hibernate.org/dtd/hibernate-mapping-3.0.dtd"
+  [<!ENTITY identifiableProperties SYSTEM "classpath://org/hisp/dhis/common/identifiableProperties.hbm">]
+  >
+
 
 <hibernate-mapping>
   <class name="org.hisp.dhis.dataset.CompleteDataSetRegistration" table="completedatasetregistration">
@@ -22,8 +25,7 @@
     <property name="date" column="date" type="timestamp" />
 
     <property name="storedBy" column="storedby" />
-    <property name="lastUpdated" type="timestamp" not-null="true"/>
-    <many-to-one name="lastUpdatedBy" column="lastupdatedby" foreign-key="fk_lastupdatedby_userid"/>
+    <property name="lastUpdated" column="lastupdated" type="timestamp" not-null="true"/>
     <property name="isCompleted" type="boolean" column="iscompleted" not-null="true"/>
 
   </class>

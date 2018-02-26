@@ -97,6 +97,11 @@ public class BaseIdentifiableObject
     protected Date lastUpdated;
 
     /**
+     * Last user updated this object
+     */
+    private User lastUpdatedBy;
+
+    /**
      * Set of the dynamic attributes values that belong to this data element.
      */
     protected Set<AttributeValue> attributeValues = new HashSet<>();

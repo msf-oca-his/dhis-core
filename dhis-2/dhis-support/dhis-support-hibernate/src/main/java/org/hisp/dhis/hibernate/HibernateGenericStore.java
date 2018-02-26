@@ -500,6 +500,8 @@ public class HibernateGenericStore<T>
             identifiableObject.setAutoFields();
             identifiableObject.setLastUpdatedBy( user );
 
+            identifiableObject.setLastUpdatedBy( user );
+
             if ( identifiableObject.getUser() == null )
             {
                 identifiableObject.setUser( user );

@@ -134,14 +134,14 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
 
         final String completenessSql =
             "select ds." + dsScheme + " as dsid, pe.startdate as pestart, pt.name as ptname, ou." + ouScheme + " as ouid, aoc." + ocScheme + " as aocid, " +
-                "cdr.date, cdr.storedby, cdr.lastUpdated , cdr.lastUpdatedBy, cdr.isCompleted" +
+                "cdr.date, cdr.storedby, cdr.lastupdated, cdr.iscompleted " +
                 "from completedatasetregistration cdr " +
                 "join dataset ds on (cdr.datasetid=ds.datasetid) " +
                 "join period pe on (cdr.periodid=pe.periodid) " +
                 "join periodtype pt on (pe.periodtypeid=pt.periodtypeid) " +
                 "join organisationunit ou on (cdr.sourceid=ou.organisationunitid) " +
                 "join categoryoptioncombo aoc on (cdr.attributeoptioncomboid=aoc.categoryoptioncomboid) " +
-                "where cdr.lastUpdated >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
+                "where cdr.lastupdated >= '" + DateUtils.getLongDateString( lastUpdated ) + "'";
 
         writeCompleteness( completenessSql, completeDataSetRegistrations );
     }
@@ -165,10 +165,9 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
                 completeDataSetRegistration.setOrganisationUnit( rs.getString( "ouid" ) );
                 completeDataSetRegistration.setAttributeOptionCombo( rs.getString( "aocid" ) );
                 completeDataSetRegistration.setDate( removeTime( rs.getString( "date" ) ) );
-                completeDataSetRegistration.setStoredBy( rs.getString( "storedBy" ) );
-                completeDataSetRegistration.setLastUpdatedBy( rs.getString("lastUpdatedBy"));
-                completeDataSetRegistration.setLastUpdated(rs.getDate( "lastUpdated" ));
-                completeDataSetRegistration.setCompleted( rs.getBoolean( "isCompleted" ) );
+                completeDataSetRegistration.setStoredBy( rs.getString( "storedby" ) );
+                completeDataSetRegistration.setLastUpdated( removeTime(rs.getString( "lastupdated" )) );
+                completeDataSetRegistration.setCompleted( rs.getBoolean( "iscompleted" ) );
                 completeDataSetRegistration.close();
             }
         } );
