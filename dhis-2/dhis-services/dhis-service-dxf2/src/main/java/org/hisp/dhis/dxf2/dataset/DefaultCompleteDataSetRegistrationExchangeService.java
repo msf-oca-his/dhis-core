@@ -660,7 +660,7 @@ public class DefaultCompleteDataSetRegistrationExchangeService
         String storedBy )
     {
         return new CompleteDataSetRegistration( mdProps.dataSet, mdProps.period, mdProps.orgUnit, mdProps.attrOptCombo,
-            cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now, storedBy );
+            cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now, storedBy, now, true );
     }
 
     private static void validateOrgUnitInUserHierarchy( MetaDataCaches mdCaches, MetaDataProperties mdProps,

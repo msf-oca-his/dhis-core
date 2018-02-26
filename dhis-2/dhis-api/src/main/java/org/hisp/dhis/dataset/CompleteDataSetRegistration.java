@@ -67,9 +67,10 @@ public class CompleteDataSetRegistration
     private String storedBy;
 
     private transient String periodName;
+
     private Date lastUpdated;
-    private String lastUpdatedBy;
-    private boolean isCompleted;
+
+    private Boolean isCompleted;
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -80,7 +81,7 @@ public class CompleteDataSetRegistration
     }
 
     public CompleteDataSetRegistration( DataSet dataSet, Period period, OrganisationUnit source,
-        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, Date lastUpdated, String lastUpdatedBy, boolean isCompleted)
+        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, Date lastUpdated,boolean isCompleted)
     {
         this.dataSet = dataSet;
         this.period = period;
@@ -89,7 +90,6 @@ public class CompleteDataSetRegistration
         this.date = date;
         this.storedBy = storedBy;
         this.lastUpdated = lastUpdated;
-        this.lastUpdatedBy = lastUpdatedBy;
         this.isCompleted = isCompleted;
     }
 
@@ -275,12 +275,6 @@ public class CompleteDataSetRegistration
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public String getLastUpdatedBy() { return lastUpdatedBy; }
-
-    public void setLastUpdatedBy( String lastUpdatedBy ) { this.lastUpdatedBy = lastUpdatedBy; }
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
     public Date getLastUpdated()
     {
         return lastUpdated;
@@ -299,7 +293,7 @@ public class CompleteDataSetRegistration
         return isCompleted;
     }
 
-    public void setIsCompleted( boolean isCompleted )
+    public void setIsCompleted( Boolean isCompleted )
     {
         this.isCompleted = isCompleted;
     }
@@ -317,7 +311,6 @@ public class CompleteDataSetRegistration
             .add( "storedBy", storedBy )
             .add( "periodName", periodName )
             .add( "lastUpdated", lastUpdated )
-            .add( "lastUpdatedBy", lastUpdatedBy )
             .add( "isCompleted", isCompleted )
             .toString();
     }
