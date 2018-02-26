@@ -352,8 +352,6 @@ public class CompleteDataSetRegistrationController
 
         String storedBy = (sb == null) ? currentUserService.getCurrentUsername() : sb;
 
-        String lastUpdatedBy = currentUserService.getCurrentUsername();
-
         Date completionDate = (cd == null) ? new Date() : cd;
 
         Date lastUpdatedDate = new Date();
@@ -364,7 +362,7 @@ public class CompleteDataSetRegistrationController
         if ( !multiOu )
         {
             CompleteDataSetRegistration completeDataSetRegistration = registerCompleteDataSet( dataSet, period,
-                organisationUnit, attributeOptionCombo, storedBy, completionDate ,lastUpdatedDate,lastUpdatedBy,isCompleted);
+                organisationUnit, attributeOptionCombo, storedBy, completionDate ,lastUpdatedDate,isCompleted);
 
             if ( completeDataSetRegistration != null )
             {
@@ -374,7 +372,7 @@ public class CompleteDataSetRegistrationController
         else
         {
             addRegistrationsForOrgUnits( registrations, Sets.union( children, Sets.newHashSet( organisationUnit ) ), dataSet, period,
-                attributeOptionCombo, storedBy, completionDate, lastUpdatedDate,lastUpdatedBy,isCompleted );
+                attributeOptionCombo, storedBy, completionDate, lastUpdatedDate,isCompleted );
         }
 
         registrationService.saveCompleteDataSetRegistrations( registrations, true );
@@ -443,7 +441,6 @@ public class CompleteDataSetRegistrationController
 
             String storedBy = (sb == null) ? currentUserService.getCurrentUsername() : sb;
 
-            String lastUpdatedBy = currentUserService.getCurrentUsername();
 
             Date cd = completeDataSetRegistrationRequest.getCd();
 
@@ -462,7 +459,7 @@ public class CompleteDataSetRegistrationController
                 orgUnits.addAll( organisationUnit.getChildren() );
             }
 
-            addRegistrationsForOrgUnits( registrations, orgUnits, dataSet, period, attributeOptionCombo, storedBy, completionDate, lastUpdatedDate, lastUpdatedBy, isCompleted );
+            addRegistrationsForOrgUnits( registrations, orgUnits, dataSet, period, attributeOptionCombo, storedBy, completionDate, lastUpdatedDate, isCompleted );
         }
 
         registrationService.saveCompleteDataSetRegistrations( registrations, true );
@@ -549,7 +546,7 @@ public class CompleteDataSetRegistrationController
     // -------------------------------------------------------------------------
 
     private void addRegistrationsForOrgUnits( List<CompleteDataSetRegistration> registrations, Set<OrganisationUnit> organisationUnits, DataSet dataSet, Period period,
-        DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate, Date lastUpdated, String lastUpdatedBy, boolean isCompleted )
+        DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate, Date lastUpdated,boolean isCompleted )
         throws WebMessageException
     {
         for ( OrganisationUnit ou : organisationUnits )
@@ -557,7 +554,7 @@ public class CompleteDataSetRegistrationController
             if ( ou.getDataSets().contains( dataSet ) )
             {
                 CompleteDataSetRegistration registration =
-                    registerCompleteDataSet( dataSet, period, ou, attributeOptionCombo, storedBy, completionDate, lastUpdated, lastUpdatedBy, isCompleted );
+                    registerCompleteDataSet( dataSet, period, ou, attributeOptionCombo, storedBy, completionDate, lastUpdated,isCompleted );
 
                 if ( registration != null )
                 {
@@ -601,7 +598,7 @@ public class CompleteDataSetRegistrationController
     }
 
     private CompleteDataSetRegistration registerCompleteDataSet( DataSet dataSet, Period period,
-        OrganisationUnit orgUnit, DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate, Date lastUpdated, String lastUpdatedBy, boolean isCompleted ) throws WebMessageException
+        OrganisationUnit orgUnit, DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, Date completionDate, Date lastUpdated,boolean isCompleted ) throws WebMessageException
     {
         I18nFormat format = i18nManager.getI18nFormat();
 
@@ -639,7 +636,6 @@ public class CompleteDataSetRegistrationController
 
             registration.setDate( completionDate != null ? completionDate : new Date() );
             registration.setLastUpdated( lastUpdated );
-            registration.setLastUpdatedBy( lastUpdatedBy );
             registration.setIsCompleted( isCompleted );
             registration.setStoredBy( storedBy != null ? storedBy : currentUserService.getCurrentUsername() );
             registration.setPeriodName( format.formatPeriod( registration.getPeriod() ) );
@@ -651,6 +647,7 @@ public class CompleteDataSetRegistrationController
             registration.setDate( completionDate != null ? completionDate : new Date() );
             registration.setStoredBy( storedBy != null ? storedBy : currentUserService.getCurrentUsername() );
             registration.setPeriodName( format.formatPeriod( registration.getPeriod() ) );
+            registration.setIsCompleted( isCompleted );
 
             registrationService.updateCompleteDataSetRegistration( registration );
         }

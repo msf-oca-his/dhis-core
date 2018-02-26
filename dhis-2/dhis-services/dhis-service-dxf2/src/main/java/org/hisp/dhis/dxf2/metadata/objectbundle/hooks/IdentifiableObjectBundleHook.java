@@ -55,6 +55,10 @@ public class IdentifiableObjectBundleHook extends AbstractObjectBundleHook
     {
         ((BaseIdentifiableObject) identifiableObject).setAutoFields();
 
+        BaseIdentifiableObject identifableObject = (BaseIdentifiableObject) identifiableObject;
+        identifableObject.setAutoFields();
+        identifableObject.setLastUpdatedBy( bundle.getUser() );
+
         Schema schema = schemaService.getDynamicSchema( identifiableObject.getClass() );
         Session session = sessionFactory.getCurrentSession();
         handleAttributeValues( session, identifiableObject, bundle, schema );

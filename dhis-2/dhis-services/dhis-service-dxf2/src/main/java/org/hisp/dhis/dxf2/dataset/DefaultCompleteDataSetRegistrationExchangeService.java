@@ -594,7 +594,9 @@ public class DefaultCompleteDataSetRegistrationExchangeService
             mdProps.orgUnit,
             mdProps.attrOptCombo,
             cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now,
-            storedBy
+            storedBy,
+            now,
+            true
         );
     }
 
