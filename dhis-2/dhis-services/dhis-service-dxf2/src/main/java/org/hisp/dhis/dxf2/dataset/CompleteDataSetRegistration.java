@@ -59,6 +59,10 @@ public class CompleteDataSetRegistration
 
     protected static final String FIELD_STORED_BY = "storedBy";
 
+    protected static final String FIELD_LAST_UPDATED = "lastUpdated";
+
+    protected static final String FIELD_IS_COMPLETED = "completed";
+
     //--------------------------------------------------------------------------
     // Properties
     //--------------------------------------------------------------------------
@@ -81,7 +85,7 @@ public class CompleteDataSetRegistration
 
     protected String lastUpdated;
 
-    protected Boolean isCompleted;
+    protected Boolean completed;
 
     //--------------------------------------------------------------------------
     // Constructors
@@ -110,6 +114,8 @@ public class CompleteDataSetRegistration
             .add( FIELD_ATTR_OPTION_COMBO, attributeOptionCombo )
             .add( FIELD_DATE, date )
             .add( FIELD_STORED_BY, storedBy )
+            .add(FIELD_LAST_UPDATED, lastUpdated)
+            .add(FIELD_IS_COMPLETED,completed)
             .toString();
     }
 
@@ -227,15 +233,17 @@ public class CompleteDataSetRegistration
         this.lastUpdated = lastUpdated;
     }
 
+
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )
-    public boolean getCompleted()
+    public Boolean getCompleted()
     {
-        return isCompleted;
+        return completed;
     }
 
     public void setCompleted( Boolean completed )
     {
-        this.isCompleted = completed;
+        this.completed = completed;
     }
+
 }

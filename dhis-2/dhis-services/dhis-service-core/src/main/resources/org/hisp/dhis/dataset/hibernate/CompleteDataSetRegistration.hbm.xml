@@ -26,7 +26,7 @@
 
     <property name="storedBy" column="storedby" />
     <property name="lastUpdated" column="lastupdated" type="timestamp" not-null="true"/>
-    <property name="isCompleted" type="boolean" column="iscompleted" not-null="true"/>
+    <property name="completed" type="boolean" column="iscompleted" not-null="true"/>
 
   </class>
 </hibernate-mapping>

@@ -298,7 +298,7 @@ public class GetDataValuesForDataSetAction
 
             if ( registration != null )
             {
-                complete = registration.getIsCompleted();
+                complete = registration.getCompleted();
                 date = registration.getDate();
                 storedBy = registration.getStoredBy();
             }
@@ -326,7 +326,7 @@ public class GetDataValuesForDataSetAction
                         dataSet, period, ou, attributeOptionCombo );
 
                     if(registration != null) {
-                        complete = registration.getIsCompleted();
+                        complete = registration.getCompleted();
                     }
 
                 }

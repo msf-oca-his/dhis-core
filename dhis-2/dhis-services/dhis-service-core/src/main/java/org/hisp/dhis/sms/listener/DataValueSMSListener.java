@@ -55,12 +55,12 @@ import org.hisp.dhis.system.util.SmsUtils;
 import org.jfree.util.Log;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
+import javax.annotation.Resource;
 
 import java.util.*;
 
-import javax.annotation.Resource;
-
 @Transactional
+
 public class DataValueSMSListener
     extends BaseSMSListener
 {
