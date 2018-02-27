@@ -66,11 +66,12 @@ public class CompleteDataSetRegistration
 
     private String storedBy;
 
-    private transient String periodName;
-
     private Date lastUpdated;
 
-    private Boolean isCompleted;
+    private Boolean completed;
+
+    private transient String periodName;
+
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -81,7 +82,7 @@ public class CompleteDataSetRegistration
     }
 
     public CompleteDataSetRegistration( DataSet dataSet, Period period, OrganisationUnit source,
-        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, Date lastUpdated,boolean isCompleted)
+        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, Date lastUpdated,Boolean isCompleted)
     {
         this.dataSet = dataSet;
         this.period = period;
@@ -90,7 +91,7 @@ public class CompleteDataSetRegistration
         this.date = date;
         this.storedBy = storedBy;
         this.lastUpdated = lastUpdated;
-        this.isCompleted = isCompleted;
+        this.completed = isCompleted;
     }
 
     // -------------------------------------------------------------------------
@@ -285,20 +286,6 @@ public class CompleteDataSetRegistration
         this.lastUpdated = lastUpdated;
     }
 
-
-    @JsonProperty
-    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    public boolean getIsCompleted()
-    {
-        return isCompleted;
-    }
-
-    public void setIsCompleted( Boolean isCompleted )
-    {
-        this.isCompleted = isCompleted;
-    }
-
-
     @Override
     public String toString()
     {
@@ -309,9 +296,21 @@ public class CompleteDataSetRegistration
             .add( "attributeOptionCombo", attributeOptionCombo )
             .add( "date", date )
             .add( "storedBy", storedBy )
-            .add( "periodName", periodName )
             .add( "lastUpdated", lastUpdated )
-            .add( "isCompleted", isCompleted )
+            .add( "completed", completed )
+            .add("periodName",periodName)
             .toString();
+    }
+
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public Boolean getCompleted()
+    {
+        return completed;
+    }
+
+    public void setCompleted( Boolean completed )
+    {
+        this.completed = completed;
     }
 }

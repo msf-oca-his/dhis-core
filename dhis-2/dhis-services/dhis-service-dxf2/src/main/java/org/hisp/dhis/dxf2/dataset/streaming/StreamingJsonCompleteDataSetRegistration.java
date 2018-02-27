@@ -85,6 +85,8 @@ public class StreamingJsonCompleteDataSetRegistration
         }
     }
 
+
+
     // -------------------------------------------------------------------------
     // Setters
     // -------------------------------------------------------------------------
@@ -125,12 +127,42 @@ public class StreamingJsonCompleteDataSetRegistration
         writeField( FIELD_STORED_BY, storedBy );
     }
 
+
+    @Override public void setLastUpdated( String lastUpdated )
+    {
+        writeField( FIELD_LAST_UPDATED,lastUpdated );
+    }
+
+    @Override public void setCompleted( Boolean completed )
+    {
+        writeField( FIELD_IS_COMPLETED,completed );
+    }
+
+
     // -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    @Override
-    protected void writeField( String fieldName, String value )
+
+
+    private void writeField( String fieldName, Boolean value )
+    {
+        if ( value == null )
+        {
+            return;
+        }
+
+        try
+        {
+            generator.writeObjectField( fieldName, value );
+        }
+        catch ( IOException e )
+        {
+            // Intentionally ignored
+        }
+    }
+
+    @Override protected void writeField( String fieldName, String value )
     {
         if ( value == null )
         {
