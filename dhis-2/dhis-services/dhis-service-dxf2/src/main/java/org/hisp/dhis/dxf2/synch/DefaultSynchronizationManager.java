@@ -316,9 +316,9 @@ public class DefaultSynchronizationManager
     }
 
 
-    public ImportSummary executeDataSetCompletenessPush( SystemInstance instance) throws WebMessageParseException{
+        public ImportSummary executeDataSetCompletenessPush( SystemInstance instance) throws WebMessageParseException{
         final Date startTime = new Date();
-        final Date lastSuccessTime = getLastSynchSuccessFallback();
+        final Date lastSuccessTime = getLastDataSynchSuccessFallback();
         final RequestCallback requestCallback = request ->
         {
             request.getHeaders().setContentType( MediaType.APPLICATION_JSON );
@@ -356,7 +356,7 @@ public class DefaultSynchronizationManager
 
         if ( summary != null && ImportStatus.SUCCESS.equals( summary.getStatus() ) )
         {
-            setLastSynchSuccess( startTime );
+            setLastDataSynchSuccess( startTime );
             log.info( "completeness Synch successful, setting last success time: " + startTime );
         }
         else
