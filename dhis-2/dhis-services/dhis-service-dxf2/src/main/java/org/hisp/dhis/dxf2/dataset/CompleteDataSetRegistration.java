@@ -29,11 +29,15 @@ package org.hisp.dhis.dxf2.dataset;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.StringUtils;
+import org.hisp.dhis.common.CustomLastUpdatedUserSerializer;
 import org.hisp.dhis.common.DxfNamespaces;
+import org.hisp.dhis.user.User;
 
 /**
  * @author Halvdan Hoem Grelland
@@ -59,6 +63,8 @@ public class CompleteDataSetRegistration
 
     protected static final String FIELD_STORED_BY = "storedBy";
 
+    protected static final String FIELD_LAST_UPDATED_BY = "lastUpdatedBy";
+
     protected static final String FIELD_LAST_UPDATED = "lastUpdated";
 
     protected static final String FIELD_IS_COMPLETED = "completed";
@@ -83,9 +89,13 @@ public class CompleteDataSetRegistration
     
     protected String cp;
 
+    private User lastUpdatedBy;
+
     protected String lastUpdated;
 
     protected Boolean completed;
+
+
 
     //--------------------------------------------------------------------------
     // Constructors
@@ -114,6 +124,7 @@ public class CompleteDataSetRegistration
             .add( FIELD_ATTR_OPTION_COMBO, attributeOptionCombo )
             .add( FIELD_DATE, date )
             .add( FIELD_STORED_BY, storedBy )
+            .add( FIELD_LAST_UPDATED_BY, lastUpdatedBy )
             .add(FIELD_LAST_UPDATED, lastUpdated)
             .add(FIELD_IS_COMPLETED,completed)
             .toString();
@@ -246,4 +257,17 @@ public class CompleteDataSetRegistration
         this.completed = completed;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    @JsonSerialize( using = CustomLastUpdatedUserSerializer.class )
+    @JsonDeserialize
+    public User getLastUpdatedBy()
+    {
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy( User lastUpdatedBy )
+    {
+        this.lastUpdatedBy = lastUpdatedBy;
+    }
 }
