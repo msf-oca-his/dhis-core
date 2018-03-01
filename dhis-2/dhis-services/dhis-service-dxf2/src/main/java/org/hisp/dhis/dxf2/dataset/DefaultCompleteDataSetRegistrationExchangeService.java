@@ -660,11 +660,12 @@ public class DefaultCompleteDataSetRegistrationExchangeService
         String storedBy )
     {
         return new CompleteDataSetRegistration( mdProps.dataSet, mdProps.period, mdProps.orgUnit, mdProps.attrOptCombo,
-            cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now, storedBy, cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now, cdsr.getCompleted() );
+            cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now, storedBy, cdsr.getLastUpdatedBy(), cdsr.hasDate() ? DateUtils.parseDate( cdsr.getDate() ) : now, cdsr.getCompleted() );
     }
 
     private static void validateOrgUnitInUserHierarchy( MetaDataCaches mdCaches, MetaDataProperties mdProps,
         final Set<OrganisationUnit> userOrgUnits, String currentUsername )
+
         throws ImportConflictException
     {
         boolean inUserHierarchy = mdCaches.orgUnitInHierarchyMap.get( mdProps.orgUnit.getUid(),

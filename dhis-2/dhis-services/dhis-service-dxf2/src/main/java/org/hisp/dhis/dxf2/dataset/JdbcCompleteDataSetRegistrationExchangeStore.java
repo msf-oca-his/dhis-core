@@ -29,7 +29,6 @@ package org.hisp.dhis.dxf2.dataset;
  */
 
 import com.google.common.collect.ImmutableMap;
-import org.hisp.staxwax.factory.XMLFactory;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.commons.logging.Log;
@@ -45,6 +44,9 @@ import org.hisp.dhis.dxf2.dataset.streaming.StreamingXmlCompleteDataSetRegistrat
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.PeriodType;
 import org.hisp.dhis.system.util.DateUtils;
+import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserService;
+import org.hisp.staxwax.factory.XMLFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowCallbackHandler;
@@ -63,6 +65,9 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
     implements CompleteDataSetRegistrationExchangeStore
 {
     private static final Log log = LogFactory.getLog( JdbcCompleteDataSetRegistrationExchangeStore.class );
+
+    @Autowired
+    UserService userService;
 
     //--------------------------------------------------------------------------
     // Id scheme parameters
@@ -134,7 +139,7 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
 
         final String completenessSql =
             "select ds." + dsScheme + " as dsid, pe.startdate as pestart, pt.name as ptname, ou." + ouScheme + " as ouid, aoc." + ocScheme + " as aocid, " +
-                "cdr.date, cdr.storedby, cdr.lastupdated, cdr.iscompleted " +
+                "cdr.date, cdr.storedby, cdr.lastupdatedby, cdr.lastupdated, cdr.iscompleted " +
                 "from completedatasetregistration cdr " +
                 "join dataset ds on (cdr.datasetid=ds.datasetid) " +
                 "join period pe on (cdr.periodid=pe.periodid) " +
@@ -159,6 +164,9 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
             {
                 CompleteDataSetRegistration completeDataSetRegistration = completeDataSetRegistrations.getCompleteDataSetRegistrationInstance();
                 PeriodType pt = PeriodType.getPeriodTypeByName( rs.getString( "ptname" ) );
+
+                User user = userService.getUser(rs.getInt( "lastupdatedby" ));
+
                 completeDataSetRegistration.open();
                 completeDataSetRegistration.setDataSet( rs.getString( "dsid" ) );
                 completeDataSetRegistration.setPeriod( pt.createPeriod( rs.getDate( "pestart" ), calendar ).getIsoDate() );
@@ -166,6 +174,7 @@ public class JdbcCompleteDataSetRegistrationExchangeStore
                 completeDataSetRegistration.setAttributeOptionCombo( rs.getString( "aocid" ) );
                 completeDataSetRegistration.setDate( removeTime( rs.getString( "date" ) ) );
                 completeDataSetRegistration.setStoredBy( rs.getString( "storedby" ) );
+                completeDataSetRegistration.setLastUpdatedBy( user );
                 completeDataSetRegistration.setLastUpdated( removeTime(rs.getString( "lastupdated" )) );
                 completeDataSetRegistration.setCompleted( rs.getBoolean( "iscompleted" ) );
                 completeDataSetRegistration.close();

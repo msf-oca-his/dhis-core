@@ -5,7 +5,7 @@ package org.hisp.dhis.dxf2.dataset.streaming;
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
+ * modification, are permitted provided that the following conditions are met:co
  * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
  *
@@ -30,6 +30,7 @@ package org.hisp.dhis.dxf2.dataset.streaming;
 
 import com.fasterxml.jackson.core.JsonGenerator;
 import org.hisp.dhis.dxf2.dataset.CompleteDataSetRegistration;
+import org.hisp.dhis.user.User;
 
 import java.io.IOException;
 
@@ -138,8 +139,13 @@ public class StreamingJsonCompleteDataSetRegistration
         writeField( FIELD_IS_COMPLETED,completed );
     }
 
+    @Override public void setLastUpdatedBy( User lastUpdatedBy )
+    {
+        writeObject( lastUpdatedBy);
+    }
 
-    // -------------------------------------------------------------------------
+
+// -------------------------------------------------------------------------
     // Supportive methods
     // -------------------------------------------------------------------------
 
@@ -161,6 +167,32 @@ public class StreamingJsonCompleteDataSetRegistration
             // Intentionally ignored
         }
     }
+
+
+    private void writeObject( User user )
+    {
+        if ( user == null )
+        {
+            return;
+        }
+
+        try
+        {
+            generator.writeObjectFieldStart(FIELD_LAST_UPDATED_BY);
+
+            generator.writeObjectField("id",user.getId() );
+
+            generator.writeObjectField( "name",user.getName() );
+
+            generator.writeEndObject();
+
+        }
+        catch ( IOException e )
+        {
+            // Intentionally ignored
+        }
+    }
+
 
     @Override protected void writeField( String fieldName, String value )
     {

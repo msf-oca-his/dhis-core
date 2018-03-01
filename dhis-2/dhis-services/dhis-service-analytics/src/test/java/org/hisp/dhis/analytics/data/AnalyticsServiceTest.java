@@ -922,7 +922,7 @@ public class AnalyticsServiceTest
 
             CompleteDataSetRegistration completeDataSetRegistration = new CompleteDataSetRegistration( dataSet, period,
                 organisationUnit, ocDef, now,
-                storedBy );
+                storedBy,null,now,true );
             completeDataSetRegistrationService.saveCompleteDataSetRegistration( completeDataSetRegistration );
         }
 
