@@ -125,6 +125,7 @@ public class CompleteDataSetRegistrationBatchHandler
             "attributeoptioncomboid",
             "date",
             "storedby",
+            "lastupdatedby",
             "lastupdated",
             "iscompleted" );
     }
@@ -139,6 +140,7 @@ public class CompleteDataSetRegistrationBatchHandler
             registration.getAttributeOptionCombo().getId(),
             getLongDateString( registration.getDate() ),
             registration.getStoredBy(),
+            registration.getLastUpdatedBy(),
             registration.getLastUpdated(),
             registration.getCompleted() );
     }

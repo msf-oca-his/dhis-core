@@ -38,6 +38,7 @@ import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.Period;
+import org.hisp.dhis.user.User;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -66,12 +67,13 @@ public class CompleteDataSetRegistration
 
     private String storedBy;
 
+    private User lastUpdatedBy;
+
     private Date lastUpdated;
 
     private Boolean completed;
 
     private transient String periodName;
-
 
     // -------------------------------------------------------------------------
     // Constructors
@@ -82,7 +84,7 @@ public class CompleteDataSetRegistration
     }
 
     public CompleteDataSetRegistration( DataSet dataSet, Period period, OrganisationUnit source,
-        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, Date lastUpdated,Boolean isCompleted)
+        DataElementCategoryOptionCombo attributeOptionCombo, Date date, String storedBy, User lastUpdatedBy, Date lastUpdated,Boolean isCompleted)
     {
         this.dataSet = dataSet;
         this.period = period;
@@ -90,6 +92,7 @@ public class CompleteDataSetRegistration
         this.attributeOptionCombo = attributeOptionCombo;
         this.date = date;
         this.storedBy = storedBy;
+        this.lastUpdatedBy = lastUpdatedBy;
         this.lastUpdated = lastUpdated;
         this.completed = isCompleted;
     }
@@ -286,20 +289,16 @@ public class CompleteDataSetRegistration
         this.lastUpdated = lastUpdated;
     }
 
-    @Override
-    public String toString()
+    @JsonProperty
+    @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
+    public User getLastUpdatedBy()
     {
-        return MoreObjects.toStringHelper( this )
-            .add( "dataSet", dataSet )
-            .add( "period", period )
-            .add( "source", source )
-            .add( "attributeOptionCombo", attributeOptionCombo )
-            .add( "date", date )
-            .add( "storedBy", storedBy )
-            .add( "lastUpdated", lastUpdated )
-            .add( "completed", completed )
-            .add("periodName",periodName)
-            .toString();
+        return lastUpdatedBy;
+    }
+
+    public void setLastUpdatedBy( User lastUpdatedBy )
+    {
+        this.lastUpdatedBy = lastUpdatedBy;
     }
 
     @JsonProperty
@@ -312,5 +311,22 @@ public class CompleteDataSetRegistration
     public void setCompleted( Boolean completed )
     {
         this.completed = completed;
+    }
+
+    @Override
+    public String toString()
+    {
+        return MoreObjects.toStringHelper( this )
+            .add( "dataSet", dataSet )
+            .add( "period", period )
+            .add( "source", source )
+            .add( "attributeOptionCombo", attributeOptionCombo )
+            .add( "date", date )
+            .add( "storedBy", storedBy )
+            .add("lastUpdatedBy",lastUpdatedBy)
+            .add( "lastUpdated", lastUpdated )
+            .add( "completed", completed )
+            .add("periodName",periodName)
+            .toString();
     }
 }

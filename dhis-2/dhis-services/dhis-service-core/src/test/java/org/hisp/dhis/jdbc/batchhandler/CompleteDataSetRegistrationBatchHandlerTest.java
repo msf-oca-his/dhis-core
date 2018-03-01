@@ -70,7 +70,7 @@ public class CompleteDataSetRegistrationBatchHandlerTest
     
     @Autowired
     private CompleteDataSetRegistrationService registrationService;
-    
+
     private BatchHandler<CompleteDataSetRegistration> batchHandler;
 
     private PeriodType periodTypeA;
@@ -105,6 +105,8 @@ public class CompleteDataSetRegistrationBatchHandlerTest
 
         periodTypeA = PeriodType.getPeriodTypeByName( MonthlyPeriodType.NAME );
 
+//        User user = new User();
+
         dataSetA = createDataSet( 'A', periodTypeA );
 
         idObjectManager.save( dataSetA );
@@ -123,10 +125,10 @@ public class CompleteDataSetRegistrationBatchHandlerTest
         
         attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();        
         
-        regA = new CompleteDataSetRegistration( dataSetA, periodA, unitA, attributeOptionCombo, now, storedBy,now,true);
-        regB = new CompleteDataSetRegistration( dataSetA, periodA, unitB, attributeOptionCombo, now, storedBy,now,true);
-        regC = new CompleteDataSetRegistration( dataSetA, periodB, unitA, attributeOptionCombo, now, storedBy ,now,true);
-        regD = new CompleteDataSetRegistration( dataSetA, periodB, unitB, attributeOptionCombo, now, storedBy,now,true );
+        regA = new CompleteDataSetRegistration( dataSetA, periodA, unitA, attributeOptionCombo, now, storedBy,null,now,true);
+        regB = new CompleteDataSetRegistration( dataSetA, periodA, unitB, attributeOptionCombo, now, storedBy,null,now,true);
+        regC = new CompleteDataSetRegistration( dataSetA, periodB, unitA, attributeOptionCombo, now, storedBy, null,now,true);
+        regD = new CompleteDataSetRegistration( dataSetA, periodB, unitB, attributeOptionCombo, now, storedBy,null,now,true );
         
         batchHandler.init();
     }
