@@ -141,7 +141,7 @@ public class StreamingJsonCompleteDataSetRegistration
 
     @Override public void setLastUpdatedBy( User lastUpdatedBy )
     {
-        writeObject( lastUpdatedBy);
+        writeObject(lastUpdatedBy);
     }
 
 
@@ -178,13 +178,14 @@ public class StreamingJsonCompleteDataSetRegistration
 
         try
         {
-            generator.writeObjectFieldStart(FIELD_LAST_UPDATED_BY);
 
-            generator.writeObjectField("id",user.getId() );
-
-            generator.writeObjectField( "name",user.getName() );
-
+            generator.writeFieldName( FIELD_LAST_UPDATED_BY);
+            generator.writeStartObject();
+            generator.writeObjectField( "id", user.getId() );
+            generator.writeObjectField( "name", user.getDisplayName() );
             generator.writeEndObject();
+
+
 
         }
         catch ( IOException e )
