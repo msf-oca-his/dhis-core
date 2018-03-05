@@ -29,13 +29,10 @@ package org.hisp.dhis.dxf2.dataset;
  */
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty;
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement;
 import com.google.common.base.MoreObjects;
 import org.apache.commons.lang3.StringUtils;
-import org.hisp.dhis.common.CustomLastUpdatedUserSerializer;
 import org.hisp.dhis.common.DxfNamespaces;
 import org.hisp.dhis.user.User;
 
@@ -245,8 +242,6 @@ public class CompleteDataSetRegistration
 
     @JsonProperty
     @JacksonXmlProperty( namespace = DxfNamespaces.DXF_2_0 )
-    @JsonSerialize( using = CustomLastUpdatedUserSerializer.class )
-    @JsonDeserialize
     public User getLastUpdatedBy()
     {
         return lastUpdatedBy;

@@ -110,7 +110,8 @@ public class MetadataSyncTask
         }
         catch ( Exception e )
         {
-            log.error( "Exception occurred while executing metadata sync task." + e.getMessage(), e );
+            String customMessage = "Exception occurred while executing metadata sync task." + e.getMessage();
+            log.error( customMessage, e );
         }
     }
 

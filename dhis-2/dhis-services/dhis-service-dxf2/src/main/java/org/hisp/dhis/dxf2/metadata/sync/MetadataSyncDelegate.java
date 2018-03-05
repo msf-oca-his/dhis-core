@@ -53,6 +53,12 @@ public class MetadataSyncDelegate
 {
     private static final Log log = LogFactory.getLog( MetadataSyncDelegate.class );
 
+    public static void main( String[] args )
+    {
+        System.out.println("Hello World!");
+
+    }
+
     @Autowired
     private DefaultMetadataSystemSettingService metadataSystemSettingService;
 
