@@ -213,6 +213,10 @@ public class GetDataValuesForDataSetAction
         return storedBy;
     }
 
+    private String lastUpdatedBy;
+
+    public String getLastUpdatedBy() { return lastUpdatedBy; }
+
     private Map<String, FileResource> dataValueFileResourceMap = new HashMap<>();
 
     public Map<String, FileResource> getDataValueFileResourceMap()
@@ -301,6 +305,7 @@ public class GetDataValuesForDataSetAction
                 complete = registration.getCompleted();
                 date = registration.getDate();
                 storedBy = registration.getStoredBy();
+                lastUpdatedBy = registration.getLastUpdatedBy().getUsername();
             }
 
             locked = dataSetService.isLocked( dataSet, period, organisationUnit, attributeOptionCombo, null );
@@ -327,6 +332,7 @@ public class GetDataValuesForDataSetAction
 
                     if(registration != null) {
                         complete = registration.getCompleted();
+                        lastUpdatedBy = registration.getLastUpdatedBy().getUsername();
                     }
 
                 }
