@@ -310,25 +310,6 @@ public class CompleteDataSetRegistrationController
     // Supportive methods
     // -------------------------------------------------------------------------
 
-    private void addRegistrationsForOrgUnits( List<CompleteDataSetRegistration> registrations, Set<OrganisationUnit> organisationUnits, DataSet dataSet, Period period,
-        DataElementCategoryOptionCombo attributeOptionCombo, String storedBy, User lastUpdatedBy, Date completionDate, boolean isCompleted )
-        throws WebMessageException
-    {
-        for ( OrganisationUnit ou : organisationUnits )
-        {
-            if ( ou.getDataSets().contains( dataSet ) )
-            {
-                CompleteDataSetRegistration registration =
-                    registerCompleteDataSet( dataSet, period, ou, attributeOptionCombo, storedBy, lastUpdatedBy, completionDate, isCompleted );
-
-                if ( registration != null )
-                {
-                    registrations.add( registration );
-                }
-            }
-        }
-    }
-
     private void asyncImport( ImportOptions importOptions, String format, HttpServletRequest request, HttpServletResponse response )
         throws IOException
     {

@@ -824,16 +824,18 @@ public class DefaultCompleteDataSetRegistrationExchangeService
     public MetaDataProperties initMetaDataProperties(
         org.hisp.dhis.dxf2.dataset.CompleteDataSetRegistration cdsr, MetaDataCallables callables, MetaDataCaches cache )
     {
-        String ds = StringUtils.trimToNull( cdsr.getDataSet() ), pe = StringUtils.trimToNull( cdsr.getPeriod() ),
-            ou = StringUtils.trimToNull( cdsr.getOrganisationUnit() ),
-            aoc = StringUtils.trimToNull( cdsr.getAttributeOptionCombo() );    
+        String
+                ds = StringUtils.trimToNull( cdsr.getDataSet() ),
+                pe = StringUtils.trimToNull( cdsr.getPeriod() ),
+                ou = StringUtils.trimToNull( cdsr.getOrganisationUnit() ),
+                aoc = StringUtils.trimToNull( cdsr.getAttributeOptionCombo() );
         
         if( aoc == null )
         {
             DataElementCategoryOptionCombo attributeOptionCombo = inputUtils.getAttributeOptionCombo( cdsr.getCc(), cdsr.getCp(), false );
             aoc = attributeOptionCombo != null ? attributeOptionCombo.getUid() : aoc;
         }
-        
+
         return new MetaDataProperties( cache.dataSets.get( ds, callables.dataSetCallable.setId( ds ) ),
             cache.periods.get( pe, callables.periodCallable.setId( pe ) ),
             cache.orgUnits.get( ou, callables.orgUnitCallable.setId( ou ) ),

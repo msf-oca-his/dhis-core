@@ -135,7 +135,7 @@ public class MetadataSyncPreProcessor
         {
             String message = remoteServerAvailable.getMessage();
             log.error( message );
-            context.updateRetryContext( MetadataSyncTask.DATA_PUSH_SUMMARY, remoteServerAvailable.getMessage(), null, null );
+            context.updateRetryContext( MetadataSyncJob.EVENT_PUSH_SUMMARY, remoteServerAvailable.getMessage(), null, null );
             throw new MetadataSyncServiceException( message );
         }
 
@@ -151,7 +151,7 @@ public class MetadataSyncPreProcessor
             {
                 throw (MetadataSyncServiceException)ex;
             }
-            context.updateRetryContext( MetadataSyncTask.DATA_PUSH_SUMMARY, ex.getMessage(), null, null );
+            context.updateRetryContext( MetadataSyncJob.EVENT_PUSH_SUMMARY, remoteServerAvailable.getMessage(), null, null );
             throw new MetadataSyncServiceException( ex.getMessage(), ex );
         }
 
