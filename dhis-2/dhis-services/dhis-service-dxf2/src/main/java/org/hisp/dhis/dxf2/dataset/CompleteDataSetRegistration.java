@@ -241,6 +241,17 @@ public class CompleteDataSetRegistration
         this.lastUpdated = lastUpdated;
     }
 
+    @JsonProperty
+    @JacksonXmlProperty( isAttribute = true )
+    public String getCp()
+    {
+        return cp;
+    }
+
+    public void setCp( String cp )
+    {
+        this.cp = cp;
+    }
 
     @JsonProperty
     @JacksonXmlProperty( isAttribute = true )

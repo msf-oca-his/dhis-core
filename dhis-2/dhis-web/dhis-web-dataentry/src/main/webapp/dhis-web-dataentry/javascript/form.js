@@ -1734,7 +1734,8 @@ function getOfflineDataValueJson( params )
 	json.complete = complete;
 	json.date = "";
 	json.storedBy = "";
-		
+	json.lastUpdatedBy = "";
+
 	for ( var i = 0; i < dataValues.length; i++ )
 	{
 		var dataValue = dataValues[i];
@@ -1954,13 +1955,13 @@ function insertDataValues( json )
         $( '#completeButton' ).attr( 'disabled', 'disabled' );
         $( '#undoButton' ).removeAttr( 'disabled' );
 
-        if ( json.storedBy )
+        if ( json.lastUpdatedBy )
         {
             $( '#infoDiv' ).show();
-            $( '#completedBy' ).html( json.storedBy );
+            $( '#completedBy' ).html( json.lastUpdatedBy );
             $( '#completedDate' ).html( json.date );
 
-            dhis2.de.currentCompletedByUser = json.storedBy;
+            dhis2.de.currentCompletedByUser = json.lastUpdatedBy;
         }
     }
     else
