@@ -2109,13 +2109,13 @@ function registerCompleteDataSet(completedStatus)
             {
                 if( item.uid )
                 {    			  	        
-                    cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: item.uid, isCompleted: params.isCompleted} );
+                    cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: item.uid, completed: params.isCompleted} );
                 }            
             } );
         }
         else
         {
-            cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: params.ou, isCompleted: params.isCompleted} );
+            cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: params.ou, completed: params.isCompleted} );
         }
 
 	    $.ajax( {
@@ -2130,7 +2130,7 @@ function registerCompleteDataSet(completedStatus)
                 if( data.status == 'SUCCESS' )
                 {
                     $( document ).trigger( dhis2.de.event.completed, [ dhis2.de.currentDataSetId, params ] );
-                    disableCompleteButton();                    
+                    disableCompleteButton(params.isCompleted);
                 }
                 else if( data.status == 'ERROR' )
                 {
