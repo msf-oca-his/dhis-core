@@ -32,6 +32,7 @@ import com.google.common.collect.ImmutableSet;
 import org.hisp.dhis.dataset.notifications.DataSetNotificationEventPublisher;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.JobConfiguration;
+import org.hisp.dhis.user.User;
 import org.hisp.staxwax.factory.XMLFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -482,6 +483,8 @@ public class DefaultCompleteDataSetRegistrationExchangeService
             // ---------------------------------------------------------------------
 
             String storedBy;
+            User lastUpdatedBy;
+            Boolean isCompleted;
 
             try
             {
@@ -512,6 +515,15 @@ public class DefaultCompleteDataSetRegistrationExchangeService
                 storedBy = cdsr.getStoredBy();
                 validateStoredBy( storedBy, i18n );
                 storedBy = StringUtils.isBlank( storedBy ) ? currentUser : storedBy;
+
+                lastUpdatedBy = cdsr.getLastUpdatedBy();
+                lastUpdatedBy = (lastUpdatedBy == null) ? currentUserService.getCurrentUser() : lastUpdatedBy;
+                cdsr.setLastUpdatedBy(lastUpdatedBy);
+
+                boolean DEFAULT_COMPLETENESS_STATUS = true;
+                isCompleted = cdsr.getCompleted();
+                isCompleted = (isCompleted == null) ? DEFAULT_COMPLETENESS_STATUS : isCompleted;
+                cdsr.setCompleted(isCompleted);
 
                 // TODO Check if Period is within range of data set?
             }

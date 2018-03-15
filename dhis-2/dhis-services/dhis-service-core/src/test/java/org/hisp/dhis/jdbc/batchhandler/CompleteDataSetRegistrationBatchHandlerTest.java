@@ -32,23 +32,25 @@ import org.hisp.dhis.DhisTest;
 import org.hisp.dhis.common.IdentifiableObjectManager;
 import org.hisp.dhis.dataelement.DataElementCategoryOptionCombo;
 import org.hisp.dhis.dataelement.DataElementCategoryService;
-import org.hisp.dhis.dataset.CompleteDataSetRegistration;
-import org.hisp.dhis.dataset.CompleteDataSetRegistrationService;
-import org.hisp.dhis.dataset.DataSet;
+import org.hisp.dhis.dataset.*;
 import org.hisp.dhis.organisationunit.OrganisationUnit;
 import org.hisp.dhis.period.MonthlyPeriodType;
 import org.hisp.dhis.period.Period;
 import org.hisp.dhis.period.PeriodService;
 import org.hisp.dhis.period.PeriodType;
+import org.hisp.dhis.user.User;
 import org.hisp.quick.BatchHandler;
 import org.hisp.quick.BatchHandlerFactory;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.*;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 /**
  * @author Lars Helge Overland
@@ -105,7 +107,10 @@ public class CompleteDataSetRegistrationBatchHandlerTest
 
         periodTypeA = PeriodType.getPeriodTypeByName( MonthlyPeriodType.NAME );
 
-//        User user = new User();
+        CompleteDataSetRegistrationStore mockCompleteDataSetRegistrationStore = mock(CompleteDataSetRegistrationStore.class);
+
+        User lastUpdatedBy = new User();
+        lastUpdatedBy.setId(1);
 
         dataSetA = createDataSet( 'A', periodTypeA );
 
@@ -125,11 +130,21 @@ public class CompleteDataSetRegistrationBatchHandlerTest
         
         attributeOptionCombo = categoryService.getDefaultDataElementCategoryOptionCombo();        
         
-        regA = new CompleteDataSetRegistration( dataSetA, periodA, unitA, attributeOptionCombo, now, storedBy,null,now,true);
-        regB = new CompleteDataSetRegistration( dataSetA, periodA, unitB, attributeOptionCombo, now, storedBy,null,now,true);
-        regC = new CompleteDataSetRegistration( dataSetA, periodB, unitA, attributeOptionCombo, now, storedBy, null,now,true);
-        regD = new CompleteDataSetRegistration( dataSetA, periodB, unitB, attributeOptionCombo, now, storedBy,null,now,true );
-        
+        regA = new CompleteDataSetRegistration( dataSetA, periodA, unitA, attributeOptionCombo, now, storedBy,lastUpdatedBy,now,true);
+        regB = new CompleteDataSetRegistration( dataSetA, periodA, unitB, attributeOptionCombo, now, storedBy,lastUpdatedBy, now,true);
+        regC = new CompleteDataSetRegistration( dataSetA, periodB, unitA, attributeOptionCombo, now, storedBy, lastUpdatedBy, now,true);
+        regD = new CompleteDataSetRegistration( dataSetA, periodB, unitB, attributeOptionCombo, now, storedBy,lastUpdatedBy, now,true );
+
+        ArrayList<CompleteDataSetRegistration> completeDataSetRegistrations = new ArrayList<>();
+        completeDataSetRegistrations.add(regA);
+        completeDataSetRegistrations.add(regB);
+        completeDataSetRegistrations.add(regC);
+        completeDataSetRegistrations.add(regD);
+        when(mockCompleteDataSetRegistrationStore.getAllCompleteDataSetRegistrations()).thenReturn(completeDataSetRegistrations);
+
+        DefaultCompleteDataSetRegistrationService defaultCompleteDataSetRegistrationService = new DefaultCompleteDataSetRegistrationService();
+        defaultCompleteDataSetRegistrationService.setCompleteDataSetRegistrationStore(mockCompleteDataSetRegistrationStore);
+        registrationService = defaultCompleteDataSetRegistrationService;
         batchHandler.init();
     }
 

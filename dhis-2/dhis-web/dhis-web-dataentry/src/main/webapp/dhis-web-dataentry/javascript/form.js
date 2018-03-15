@@ -2109,13 +2109,13 @@ function registerCompleteDataSet(completedStatus)
             {
                 if( item.uid )
                 {    			  	        
-                    cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: item.uid, isCompleted: true} );
+                    cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: item.uid, isCompleted: params.isCompleted} );
                 }            
             } );
         }
         else
         {
-            cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: params.ou, isCompleted: true} );
+            cdsr.completeDataSetRegistrations.push( {cc: params.cc, cp: params.cp, dataSet: params.ds,period: params.pe, organisationUnit: params.ou, isCompleted: params.isCompleted} );
         }
 
 	    $.ajax( {
