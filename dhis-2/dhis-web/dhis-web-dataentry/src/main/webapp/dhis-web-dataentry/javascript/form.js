@@ -2206,7 +2206,7 @@ function undoCompleteDataSet()
             if( data.status == 'SUCCESS' )
             {
                 $( document ).trigger( dhis2.de.event.completed, [ dhis2.de.currentDataSetId, params ] );
-                disableCompleteButton();                    
+                disableCompleteButton(params);
             }
             else if( data.status == 'ERROR' )
             {

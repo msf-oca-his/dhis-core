@@ -35,5 +35,5 @@
   "complete":${complete},
   "date":"$!format.formatDate( $date )",
   "storedBy":"$!encoder.jsonEncode( ${storedBy} )",
-  "lastUpdatedBy":"${lastUpdatedBy}"
+  "lastUpdatedBy":"$!encoder.jsonEncode( ${lastUpdatedBy} )"
 }

@@ -33,6 +33,7 @@ import org.hisp.dhis.dataset.notifications.DataSetNotificationEventPublisher;
 import org.hisp.dhis.message.MessageService;
 import org.hisp.dhis.scheduling.JobConfiguration;
 import org.hisp.dhis.user.User;
+import org.hisp.dhis.user.UserService;
 import org.hisp.staxwax.factory.XMLFactory;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.logging.Log;
@@ -142,6 +143,9 @@ public class DefaultCompleteDataSetRegistrationExchangeService
 
     @Autowired
     private CurrentUserService currentUserService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private CompleteDataSetRegistrationService registrationService;
@@ -517,7 +521,11 @@ public class DefaultCompleteDataSetRegistrationExchangeService
                 storedBy = StringUtils.isBlank( storedBy ) ? currentUser : storedBy;
 
                 lastUpdatedBy = cdsr.getLastUpdatedBy();
-                lastUpdatedBy = (lastUpdatedBy == null) ? currentUserService.getCurrentUser() : lastUpdatedBy;
+                if (lastUpdatedBy == null) {
+                    lastUpdatedBy = currentUserService.getCurrentUser();
+                } else {
+                    lastUpdatedBy = userService.getUser(Integer.parseInt(cdsr.getLastUpdatedBy().getUid()));
+                }
                 cdsr.setLastUpdatedBy(lastUpdatedBy);
 
                 boolean DEFAULT_COMPLETENESS_STATUS = true;
