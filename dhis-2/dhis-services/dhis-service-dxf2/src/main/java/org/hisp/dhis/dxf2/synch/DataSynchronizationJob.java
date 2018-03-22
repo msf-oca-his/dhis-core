@@ -73,6 +73,7 @@ public class DataSynchronizationJob
         try
         {
             synchronizationManager.executeDataPush();
+            synchronizationManager.executeDataSetCompletenessPush();
         }
         catch ( RuntimeException ex )
         {
