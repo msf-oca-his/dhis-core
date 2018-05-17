@@ -701,6 +701,7 @@ public class TableAlteror
         // remove unused configurations
         executeSql( "delete from systemsetting where name='keySmsConfig'" );
         executeSql( "delete from systemsetting where name='keySmsConfiguration'" );
+        executeSql( "UPDATE incomingsms SET userid = 0 WHERE userid IS NULL" );
 
         // update denominator of indicator which has indicatortype as 'number'
         executeSql( "UPDATE indicator SET denominator = 1, denominatordescription = '' WHERE indicatortypeid IN (SELECT DISTINCT indicatortypeid FROM indicatortype WHERE indicatornumber = true) AND denominator IS NULL" );
@@ -996,6 +997,8 @@ public class TableAlteror
         //TODO: remove - not needed in release 2.26.
         executeSql( "update programindicator set analyticstype = programindicatoranalyticstype" );
         executeSql( "alter table programindicator drop programindicatoranalyticstype" );
+       
+        updateDimensionFilterToText();
 
         log.info( "Tables updated" );
     }
@@ -1698,5 +1701,12 @@ public class TableAlteror
 
         sql = " drop table maplegendsetmaplegend";
         executeSql( sql );
+    }
+    
+    private void updateDimensionFilterToText()
+    {
+        executeSql( "alter table trackedentityattributedimension alter column \"filter\" type text;" );
+        executeSql( "alter table trackedentitydataelementdimension alter column \"filter\" type text;" );
+        executeSql( "alter table trackedentityprogramindicatordimension alter column \"filter\" type text;" );
     }
 }
