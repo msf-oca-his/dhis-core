@@ -253,7 +253,7 @@ public class MetadataVersionController
 
     //endpoint to download metadata
     @PreAuthorize( "hasRole('ALL') or hasRole('F_METADATA_MANAGE')" )
-    @RequestMapping( value = MetadataVersionSchemaDescriptor.API_ENDPOINT + "/{versionName}/data", method = RequestMethod.GET, produces = "application/json" )
+    @RequestMapping( value = MetadataVersionSchemaDescriptor.API_ENDPOINT + "/{versionName}/data", method = RequestMethod.GET, produces = ContextUtils.CONTENT_TYPE_JSON )
     public @ResponseBody String downloadVersion( @PathVariable( "versionName" ) String versionName ) throws MetadataVersionException, BadRequestException
     {
         boolean enabled = isMetadataVersioningEnabled();
